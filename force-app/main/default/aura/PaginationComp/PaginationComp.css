@@ -1,0 +1,8 @@
+.THIS .center-div{
+    margin-left: 5px;
+	margin-top: 5px;
+}
+/*toggleCss.css*/
+.THIS.toggle {
+    display: none;
+}

@@ -1,0 +1,43 @@
+<apex:page standardController="RCM_Request__c" >
+
+    <apex:form id="theForm">
+        <apex:sectionHeader title="RCM Request edit" subtitle="New RCM Request" />
+        <apex:pageBlock title="RCM Request Edit" mode="edit">
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"/>
+                <apex:commandButton action="{!cancel}" value="Cancel"/>
+            </apex:pageBlockButtons>
+        
+            <apex:pageBlockSection title="RCM Request Information" columns="2">
+                <apex:inputField value="{!RCM_Request__c.Name}" required="true"/>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Contract Request</apex:outputLabel>
+                    <apex:actionRegion >
+                        <apex:inputField value="{!RCM_Request__c.Contract_Request__c}">
+                            <apex:actionSupport event="onchange" reRender="pg1,pg2"/>
+                        </apex:inputField>
+                    </apex:actionRegion>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection id="pg1" title="Deal Information" columns="2"> 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel rendered="{! If(RCM_Request__c.Contract_Request__c == 'Req1' ,true,false) }" >Contract Type</apex:outputLabel>
+                    <apex:actionRegion >
+                        <apex:inputField value="{!RCM_Request__c.Prod_Type__c}" rendered="{! If(RCM_Request__c.Contract_Request__c == 'Req1' ,true,false) }" >                           <apex:actionSupport event="onchange" reRender="pg1,pg2"/>
+                            <apex:actionSupport event="onchange" reRender="pg2"/>
+                        </apex:inputField>
+                    </apex:actionRegion>
+                </apex:pageBlockSectionItem>
+                
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection id="pg2" title="Account Information" columns="2">
+                <apex:inputField value="{!RCM_Request__c.Test__c}" rendered="{! If(RCM_Request__c.Prod_Type__c == 'Type1' && RCM_Request__c.Contract_Request__c == 'Req1' ,true,false) }"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+        
+    </apex:form>
+</apex:page>

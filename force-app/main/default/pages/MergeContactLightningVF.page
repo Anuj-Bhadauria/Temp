@@ -1,0 +1,25 @@
+<apex:page >
+    <apex:includeLightning />
+    <div  id="LightningCompContainer" />
+    
+    <script>   
+    
+    $Lightning.use("c:MergeContactLightningForApp", function() {
+        $Lightning.createComponent("c:MergeContactLightningParent", {"AccIDFromVfPage" :"{!$CurrentPage.parameters.accid}"
+                                                              },
+                                   "LightningCompContainer",
+                                   function(component) {
+                                       
+                                       $A.eventService.addHandler({
+                                           event: 'force:navigateToSObject',
+                                           handler: function(event) {
+                                               if (sforce && sforce.one) {
+                                                   sforce.one.navigateToSObject("{!$CurrentPage.parameters.accid}", "detail");
+                                               }
+                                           }
+                                       });                                  
+                                   });
+    });
+    
+    </script>
+</apex:page>

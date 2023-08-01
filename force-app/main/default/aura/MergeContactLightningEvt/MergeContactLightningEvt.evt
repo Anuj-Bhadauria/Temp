@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" >
+    <aura:attribute name="message" type="String" ></aura:attribute>
+    <aura:attribute name="checkboxesChecked" type="List" access="global" ></aura:attribute>    
+</aura:event>

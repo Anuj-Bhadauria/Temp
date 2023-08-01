@@ -1,0 +1,140 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="MergeContactLightningController" >
+    <aura:attribute name="AccIDFromVfPage" type="string"/>
+    <aura:attribute name="Checkedcheckboxes" type="List" access="global"/>
+    <aura:attribute name="recordId" type="Id" />
+    <aura:handler   name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="contactList" type="List"/>
+    <aura:attribute name="checkval"  type="Boolean" default="false"/>
+    <aura:attribute name="selectedRow" type="List"/> 
+    <aura:attribute name="lessConMsg" type="String" default=""/> 
+    <aura:attribute name="searchTerm" type="String" default=""/> 
+    <aura:registerevent name="componentEventFired" type="c:MergeContactLightningEvt"></aura:registerevent>
+    
+    <article class="slds-card slds-p-around_small">
+        <div class="slds-card__header slds-grid slds-wrap">
+            <div >
+                <div class="slds-size_12-of-12">
+                    <div class="slds-media slds-media_responsive">
+                        <header class="slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media slds-no-space slds-grow slds-size_2-of-6">
+                                <div class="slds-media__figure">
+                                    <div class="slds-icon_container slds-icon-standard-contact" title="contact">
+                                        <lightning:icon iconName="standard:contact" size="medium" />                                        
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-size_4-of-6">
+                                    <h1 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate slds-p-around_xx-small" title="Merge My Contacts">Merge My Contacts</h1>
+                                </div></div>
+                        </header>
+                    </div>
+                </div>
+                <br/>
+                <div class="slds-grid slds-col">                    
+                    <div class="strip slds-p-around_x-small slds-size--1-of-2 slds-medium-size--5-of-6 slds-large-size--8-of-12"><h2> <b > Step 1. Select the records to merge</b></h2></div>
+                    <div class="strip slds-p-around_x-small slds-text-align_right slds-size--1-of-2 slds-medium-size--1-of-6 slds-large-size--4-of-12"><h2> <b > Step 1 of 3 </b></h2></div>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-p-around_xxx-small"><span>Please select up to three records that you wish to merge into one. Use the "Find Contacts" feature to search for specific contacts associated with this account, or click the All Contacts button to show all of the associated contacts for this account.</span>
+                    </div>                    
+                    <div class="slds-grid slds-gutters slds-grid_vertical-align-center">                        
+                        <div class="slds-col slds-size_1-of-3">   
+                            <lightning:input aura:id="searchBox" type="text" value="{!v.searchTerm}"  />
+                        </div>                         
+                        <div class="slds-col slds-size_1-of-3"  >
+                            <lightning:button  label="Find Contacts" variant="brand" onclick="{!c.findContacts}"/>
+                            <lightning:button label="All Contacts" variant="brand" onclick="{!c.doInit}"/>
+                        </div>                        
+                    </div>
+                </div>                
+                <div class="slds-media__body">                    
+                    <aura:if isTrue="{!(v.contactList.length)>50}">
+                        <div>
+                            <span class="errorMsg">The search returned more than the maximum number of rows (50). Please refine your search criteria.</span>
+                        </div>   </aura:if>                    
+                    <br/>
+                    <div class="slds-align_absolute-center">
+                        <lightning:button title="Next" class="slds-button slds-button_brand"  onclick="{!c.onNext}">Next</lightning:button>
+                        <lightning:button title="Cancel" class="slds-button slds-button_brand" onclick="{!c.onCancel}">Cancel</lightning:button>
+                    </div>
+                    <br/>
+                    <aura:if isTrue="{!v.lessConMsg!=''}">
+                        <div>
+                            <span class="errorMsg">{!v.lessConMsg}</span>
+                        </div>
+                    </aura:if>
+                    <br/>
+                    <table class="slds-table slds-table_fixed-layout slds-table_bordered slds-no-row-hover">
+                        <thead>
+                            <tr class="slds-text-title">
+                                <th class="slds-size_1-of-3 slds-cell-wrap" scope="col">
+                                    <div class="slds-truncate" title="checkbox"></div>
+                                </th>
+                                
+                                <th class="slds-size_1-of-3 slds-cell-wrap" scope="col">
+                                    <div class="slds-truncate" title="Contact">Contact</div>
+                                </th>
+                                <th class="slds-size_1-of-3 slds-cell-wrap" scope="col">
+                                    <div class="slds-truncate" title="Email">Email</div>
+                                </th>
+                                <th class="slds-size_1-of-3 slds-cell-wrap" scope="col">
+                                    <div class="slds-truncate" title="Phone">Phone</div>
+                                </th>
+                                <th class="slds-size_1-of-3 slds-cell-wrap" scope="col">
+                                    <div class="slds-truncate" title="Owner">Owner</div>
+                                </th>                                
+                            </tr>
+                        </thead>
+                        <tbody>                            
+                            <aura:iteration  start="0" end="50" items="{!v.contactList}" var="con">                                
+                                <tr class="slds-hint-parent ">
+                                    <td>
+                                        <aura:if isTrue="{!v.checkval}">                                            
+                                            <ui:inputCheckbox class="Checkbox"  aura:id="checkbox"
+                                                              value="true"       change="{!c.getSelectedRow}" text="{!'check_'+con.Id}"/>
+                                            <span class="slds-checkbox--faux" ></span>
+                                            <aura:set attribute="else">
+                                                <ui:inputCheckbox  aura:id="checkbox"
+                                                                  value="false"       change="{!c.getSelectedRow}" text="{!'check_'+con.Id}"/>
+                                                <span class="slds-checkbox--faux" ></span>
+                                            </aura:set>
+                                        </aura:if>
+                                    </td>                                    
+                                    <td class="slds-cell-wrap">
+                                        <div class="wordspace">
+                                            <a href="{!'/lightning/r/Contact/'+con.Id+'/view'}"
+                                               title="{!con.Name}">{!con.Name}
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="slds-cell-wrap">
+                                        <div class="wordspace" title="{!con.Email}">{!con.Email}
+                                        </div>
+                                    </td>
+                                    <td class="slds-cell-wrap">
+                                        <div class="wordspace" title="{!con.Phone}">{!con.Phone}
+                                        </div>
+                                    </td>
+                                    <td class="slds-cell-wrap">
+                                        <div class="wordspace" title="{!con.Owner.Name}"> {!con.Owner.Name}
+                                        </div>
+                                    </td>                               
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <aura:if isTrue="{!v.lessConMsg!=''}">
+                        <div>
+                            <span class="errorMsg">{!v.lessConMsg}</span>
+                        </div>
+                    </aura:if>
+                    <br/>
+                    <div class="slds-align_absolute-center">
+                        <lightning:button title="Next" class="slds-button slds-button_brand"  onclick="{!c.onNext}">Next</lightning:button>
+                        <lightning:button title="Cancel" class="slds-button slds-button_brand" onclick="{!c.onCancel}">Cancel</lightning:button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+</aura:component>

@@ -1,0 +1,20 @@
+<apex:page controller="SearchController">
+<apex:pageMessages ></apex:pageMessages>
+    <apex:form >
+        <apex:pageBlock title="Search Interface">
+            
+                <apex:inputText value="{!searchKey}"/>
+                <apex:commandButton value="Search" action="{!searchKeyword}" status="actStatusId"/>
+            
+            <apex:actionStatus id="actStatusId">
+                <apex:facet name="start" >
+                    <img src="/img/loading.gif"/>                    
+                </apex:facet>
+            </apex:actionStatus>
+            <apex:pageblockTable value="{!accList }" var="acc">
+          <apex:column value="{!acc.name}"/>
+          <apex:column value="{!acc.Type}"/>
+       </apex:pageblockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

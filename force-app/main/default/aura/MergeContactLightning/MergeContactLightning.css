@@ -1,0 +1,21 @@
+.THIS {
+}
+
+.THIS .input {
+    
+    margin-left: 0%;
+}
+
+@media(min-width:768px) {
+    .THIS  .input  {
+        margin-left: -18%;
+    }
+}
+
+.THIS .strip{
+    color: white;
+    background: mediumpurple; 
+}
+.THIS .errorMsg{
+    color:red
+}

@@ -1,0 +1,18 @@
+.THIS .option:checked {
+    color: Blue;
+    background: #488f8f repeat url("data:image/gif;base64,R0lGO...");
+}
+
+.THIS .Selected{
+    color: white;
+    background:#4682b4;
+}
+
+.THIS .slds-listbox_vertical .slds-listbox__option:hover{
+	background-color:#29b8e5 !important;    
+}
+
+.THIS .strip{
+    color: white;
+    background: mediumpurple;
+}

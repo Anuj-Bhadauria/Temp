@@ -1,0 +1,91 @@
+<aura:component controller="FirstLightningController" implements="flexipage:availableForAllPageTypes" >
+	<ltng:require styles="{!join(',', 
+                          $Resource.SLDS105 + '/assets/styles/salesforce-lightning-design-system-vf.css', 
+                          $Resource.SLDS105 + '/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="showSpinner" type="Boolean" default="false" />
+    <aura:attribute name="Accts" type="Account[]"/>  
+    <aura:attribute name="opps" type="Opportunity[]"/>     
+    <aura:attribute name="sobjectsStage" type="String[]"/>
+    <aura:attribute name="filterOpps" type="Opportunity[]"/>
+    
+    <div class="slds">
+        <div class="{!v.showSpinner ? 'slds-spinner_container slds-show' : 'slds-spinner_container slds-hide'}" style="z-index:1">
+            <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+		<div class="slds-p-horizontal--medium">
+            <div class="form-wrap slds-grid slds-wrap">
+                <table>
+                    <tr>
+                        <div class="slds-form-element__control">
+                            <td>
+                                <ui:inputSelect label="Accounts :" class="lclds dynamic slds-grid" change="{!c.selectOpp}" aura:id="AcctId">
+                                    <aura:iteration items="{!v.Accts}" var="account">
+                                        <ui:inputSelectOption label="{!account.Name}" text="{!account.Id}" /> 
+                                    </aura:iteration>
+                                </ui:inputSelect>
+                            </td>
+                            <td rowspan="10">
+                            <!--    <c:FilterComponent ></c:FilterComponent>
+	                            	<aura:iteration items="{!v.filterOpps}" var="fo"> 
+                                    <ui:inputText value="{!fo.Name}"/>
+                                    <ui:inputText value="{!fo.StageName}"/>
+                                </aura:iteration>  -->
+                            </td>
+                        </div>
+                    </tr>
+              <!--      <tr>
+                        <div class="slds-form-element__control">
+                            <td>                    
+                                <ui:inputSelect label="Opportunities :" class="lclds dynamic slds-select" aura:id="InputSelectDynamic1">
+                                    <ui:inputSelectOption label="-None-"/> 
+                                    <aura:iteration items="{!v.opps}" var="oppt">
+                                        <ui:inputSelectOption text="{!oppt.Name}"/> 
+                                    </aura:iteration>
+                                </ui:inputSelect>
+                                
+                            </td>
+                        </div>
+                    </tr> -->
+                    <tr>
+                        <div class="slds-form-element slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+                         <!--   <label class="slds-form-element__label" for="issueStatus">
+                                Opportunity stage:
+                            </label>  -->
+                            <div class="slds-form-element__control lclds slds-picklist--draggable slds-grid slds-picklist slds-picklist--multi">
+                          <!--      <ui:inputSelect class="multiple" aura:id="InputSelectDynamic2" multiple="true" >
+                                    <aura:iteration items="{!v.sobjectsStage}" var="s"> 
+                                        <ui:inputSelectOption text="{!s}"/> 
+                                    </aura:iteration>
+                                </ui:inputSelect>  -->
+                            </div>
+                        </div>
+                    </tr> 
+                </table> 
+            </div>
+        </div>
+    </div>
+    <div class="slds-form-element slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2">
+        
+     <!--   <div class="slds-form-element__control">
+            <ui:button class="slds-button" label="Run Filter" press="{!c.runFilter}"/>
+        </div> -->
+    </div>
+    
+   <!-- <table>
+    	<tr>
+        	<aura:iteration items="{!v.filterOpps}" var="fo"> 
+                <td>
+                    <ui:inputText value="{!fo.Name}"/>
+                    <ui:inputText value="{!fo.StageName}"/>
+                </td>
+            </aura:iteration>
+        </tr>
+    </table>  -->
+</aura:component>

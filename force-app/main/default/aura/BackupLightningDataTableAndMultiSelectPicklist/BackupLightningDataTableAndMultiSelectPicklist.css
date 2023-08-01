@@ -1,0 +1,23 @@
+.THIS .backHeader {
+    background-color: #f3f2f2;
+}
+.THIS .topGoMargin {
+	padding-top: 4px;
+    padding-right: 20px;
+}
+.THIS .topMargin {
+	padding-top: 7px;
+    padding-left: 30px;
+}
+.THIS .topRightUplaodMargin {
+	padding-top: 4px; 
+    /*padding-right: 50px;*/
+}
+.THIS .topRightMargin {
+	padding-top: 4px;
+    padding-right: 72px;
+}
+.THIS .topRightDownloadMargin {
+	padding-top: 4px;
+    /*padding-right: 50px;*/
+}

@@ -1,0 +1,42 @@
+<aura:component controller="CreateNewRecord"  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	   
+    <aura:attribute name="cont" type="Contact" default="{'sobjectType': 'Contact',
+                         'AssistantName': 'Test Con',
+                         'Birthdate': '15/08/2019',
+                         'Level__c': 'Secondary', 
+                         'LastName': 'Test Con Name',
+                         'Department':'Test Dep'
+                                               
+                       }"/>
+    <div class="container-fluid">
+        <h3>New Contact Details</h3><br/>
+        <div class="form-group">
+            <label>Assitance Name</label>
+            <ui:inputText class="form-control" value="{!v.cont.AssistantName}"/>
+        </div><br/>
+        <div class="form-group">
+            <label>Date of  Birth</label>
+            <ui:inputText class="form-control" value="{!v.cont.Birthdate}"/>
+        </div><br/>
+        <div class="form-group">
+            <label>Level</label>
+            <ui:inputText class="form-control" value="{!v.cont.Level__c}"/>
+        </div><br/>
+        <div class="form-group">
+            <label>Name</label>
+            <ui:inputText class="form-control" value="{!v.cont.LastName}"/>
+        </div><br/>
+        <div class="form-group">
+            <label>Department</label>
+            <ui:inputText class="form-control" value="{!v.cont.Department}"/>
+        </div><br/>
+       <!-- <div class="form-group">
+            <label>Account Name</label>
+            <ui:inputText class="form-control" value="{!v.cont.AccountId}"/>
+        </div><br/>-->
+    </div>
+    <div class="col-md-4 text-center">
+        <!--<lightning:button variant="brand" label="Save" title="Save" onclick ="{!c.create}" class="slds-m-top-medium"/>-->
+        <ui:button class="btn btn-default" press="{!c.create}">Save</ui:button>
+  </div>
+</aura:component>

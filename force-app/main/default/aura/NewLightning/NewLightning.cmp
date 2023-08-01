@@ -1,0 +1,71 @@
+<aura:component controller="MyNewController" implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="options" type="list"/>
+    <aura:attribute name="objRecords" type="list"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.myAction}"/>
+    <div class="slds-page-header__title">
+        <ui:inputSelect aura:id="levels" label="Object Name : " change="{!c.myAction}">
+            <aura:iteration items="{!v.options}" var="level">
+                <ui:inputSelectOption text="{!level}" label="{!level}"/>
+            </aura:iteration>
+        </ui:inputSelect>
+    </div>
+    
+    
+        <div class="slds"> 
+            <table class="slds-table slds-table--bordered slds-table--striped">
+                <!--
+                <thead>
+                    <tr>
+                        <th style="width:3.25rem;" class="slds-text-align-right">
+                            <div class="slds-form-element">
+                                
+                                <div class="slds-form-element__control">
+                                    <label class="slds-checkbox">
+                                         header checkbox for select all
+                                        <ui:inputCheckbox aura:id="box3" change="{!c.selectAll}"/>
+                                        <span class="slds-checkbox-faux"></span>
+                                        <span class="slds-form-element__label text"></span>
+                                    </label>
+                                </div>
+                                
+                            </div>
+                        </th>
+                        <aura:iteration items="{!v.lstKey}" var="key" >
+                            <th scope="col"><span class="slds-truncate">{!key}</span></th>
+                        </aura:iteration>
+                    </tr>
+                </thead>
+                -->
+                <tbody>
+                    <aura:iteration items="{!v.objRecords}" var="rec">
+                        <tr>
+                            <td scope="row" class="slds-text-align--right" style="width:3.25rem;">
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <label class="slds-checkbox">
+                                            <ui:inputCheckbox text="{!rec.Id}" aura:id="boxPack" value="" change="{!c.checkboxSelect}"/>
+                                            <span class="slds-checkbox--faux"></span>
+                                            <span class="slds-form-element__label text"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </td>
+                            
+                          <!--  <aura:iteration items="{!v.fields}" var="field" >
+                                <td>
+                                    <c:LC_ChildMap recordId="{!rec}" recordMap="{!v.myMap}" 
+                                                   fields="{!field}" isReady="true" />
+                                </td>
+                            </aura:iteration> -->
+                            
+                            <td>{!rec.Id}</td>
+                            <td>{!rec.Name}</td>
+                            <!--<td><td>{!rec.Id}</td>
+                            <td>{!rec.Name}</td> -->
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+</aura:component>

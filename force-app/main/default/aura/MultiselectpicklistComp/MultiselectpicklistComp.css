@@ -1,0 +1,120 @@
+.THIS {
+   background : white;
+}
+
+.THIS .slds-dueling-list { 
+   max-height:120px;
+}
+
+.THIS .slds-listbox__option{
+   margin: 0%;
+   padding: 0%;
+}
+
+.THIS .slds-dueling-list__options{
+   max-width: 150px;
+}
+.THIS .buttonSection  {
+    text-align: right;
+    width: 40%;
+    display: inline-block;
+    margin-left: -4%;
+}
+.THIS .footer{
+    display: flex;
+    width: 100%;
+}
+
+.THIS .errorMessage{
+    color: rgb(194, 57, 52);
+    width: 45%;
+    display: inline-block;
+}
+
+.THIS .slds-checkbox__label{
+    display: inline-block;
+    float: left;
+}
+
+.THIS .slds-has-error.slds-form-element__help{
+    width: 50%;
+    display: inline-block;
+}
+
+.THIS .slds-form-element__label{
+    display: block;
+}
+
+.THIS .slds-form-element__control{
+    display: flex;
+    width: 100%;
+    text-align: center;
+}
+
+.THIS .slds-grid.slds-grid_align-center{
+    margin-left: 2%;
+}
+
+.THIS .slds-checkbox{
+    text-align: -webkit-center;
+    text-align: -moz-center;
+    text-align: -o-center;
+    text-align: -ms-center;
+}
+
+.THIS .slds-form-element{
+    border-spacing: 15px;
+}
+
+.THIS .slds-checkbox__label{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    /* optional */
+    -webkit-box-align: start;
+    -moz-box-align: start;
+    -ms-flex-align: start;
+    -webkit-align-items: flex-start;
+    align-items: flex-start;
+}
+
+.THIS .slds-checkbox__label > .slds-checkbox--faux{
+    -webkit-box-ordinal-group: 2;
+    -moz-box-ordinal-group: 2;
+    -ms-flex-order: 2;
+    -webkit-order: 2;
+    order: 2;
+}
+
+.THIS .slds-checkbox__label > .slds-form-element__label{
+    -webkit-box-ordinal-group: 1;
+    -moz-box-ordinal-group: 1;
+    -ms-flex-order: 1;
+    -webkit-order: 1;
+    order: 1;
+}
+
+.THIS .slds-form-element__label{
+	margin-top: 3%;
+    margin-left: 10%;
+}
+
+.THIS .slds-dueling-list__options{
+    height: 70%; 
+}
+
+.THIS .slds-checkbox{
+    width: 100%;
+}
+
+.THIS .slds-form-element__label{
+    width: 100%;
+    align-self: center;
+}

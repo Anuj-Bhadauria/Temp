@@ -1,0 +1,34 @@
+<aura:component Controller="TestAccountContactController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	<aura:attribute name="acccList" type="Account[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <div class="slds"> 
+
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+        <thead>
+    <tr class="slds-line-height_reset">
+        <th/>
+      <th class="" scope="col">
+        <div class="slds-truncate" title="Account Name">Account Name</div>
+      </th>
+      
+    </tr>
+  </thead>
+        <tbody>
+            <aura:iteration items="{!v.acccList}" var="acc">
+                <tr class="slds-hint-parent">
+                    <th>
+                        <span class="slds-button slds-radio--button">
+                            <input type="radio" name="radio" id="inputRadio" text="testradio" onchange="{!c.showContacts}"/>
+                            <label class="slds-radio--button__label">
+                                <span class="slds-radio--faux"></span>
+                            </label>
+                        </span>
+                       		
+                        </th>
+                    <td>{!acc.Name}</td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+    </div>
+</aura:component>

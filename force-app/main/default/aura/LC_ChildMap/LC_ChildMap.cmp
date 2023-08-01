@@ -1,0 +1,11 @@
+<aura:component >
+    <aura:attribute name="recordMap" type="Map" />
+    <aura:attribute name="fields" type="String" />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="recordValue" type="String" />
+    <aura:attribute name="isReady" type="Boolean" default="false" />
+    <aura:attribute name="fieldRecord" type="List" />
+        
+    <aura:handler name="init" action="{!c.onChildData}" value="{!this}" />   
+            {!v.recordValue}
+</aura:component>

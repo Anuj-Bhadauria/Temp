@@ -1,0 +1,32 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="ContactsController">
+    <aura:attribute name="newContact" type="Contact" default="{ sobjectType: 'Contact'}"/>
+        <aura:attribute name="confirmTrue" type="boolean" default="true" />
+        <aura:attribute name="confirmDisplayMessage" type="boolean" default="false"/>
+
+
+    <!-- handle the init -->
+        <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- Display a header -->
+    
+    <div >
+        <h1> Create Contact</h1>
+    </div>
+    <!-- Display body -->
+
+                <ui:inputText class="slds-input" label="First Name" aura:id="contactFirstName"
+                              value="{!v.newContact.FirstName}" required="true"/>
+                <ui:inputText class="slds-input" label="Last Name" aura:id="contactLastName"
+                              value="{!v.newContact.LastName}" required="true"/>
+    			<ui:inputText class="slds-input" label="Email" aura:id="contactEmail"
+                        value="{!v.newContact.Email}" required="true"/>
+                <ui:inputText class="slds-input" label="Phone Number" aura:id="contactPhone"
+                        value="{!v.newContact.Phone}" required="true"/>
+                <ui:inputText class="slds-input" label="City" aura:id="contactCity"
+                        value="{!v.newContact.MailingCity}" required="true"/>
+	            
+           <ui:button label="Save" press="{!c.handleSaveContact}" class="slds-button slds-button--brand" />
+        
+   
+    
+</aura:component>

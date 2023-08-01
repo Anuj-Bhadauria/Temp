@@ -1,0 +1,79 @@
+<aura:component controller="AccountupdateWithCheckboxController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <!--Declare Attributes-->  
+    <aura:attribute name="ListOfAccount" type="Account[]" />
+    <aura:attribute name="selectedCount" type="integer" default="0"/>
+    
+    <!--aura init handler , call js "loadAccountList" function on component load, and display account data on table-->   
+    <aura:handler name="init" value="{!this}" action="{!c.loadAccountList}"/>
+    <!--Header part-->
+    <div class="slds-page-header">
+        <p class="slds-page-header__title slds-truncate" title="">Account List With Checkbox Action</p>
+        <span class="slds-badge">Selected Account:{!v.selectedCount}</span>
+        <div class="slds-grid slds-grid--align-end"> 
+            <button class="slds-button slds-button--brand" onclick="{!c.updateSelected}">Update Account</button>
+        </div>
+    </div>
+    <!--Accounts table part--> 
+    <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+        <thead>
+            <tr class="slds-text-title--caps">
+                <th style="width:3.25rem;" class="slds-text-align--right">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                            <label class="slds-checkbox">
+                                <!--header checkbox for select all-->
+                                <ui:inputCheckbox aura:id="box3" change="{!c.selectAll}"/>
+                                <span class="slds-checkbox--faux"></span>
+                                <span class="slds-form-element__label text"></span>
+                            </label>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <span class="slds-truncate" title="Name">Name</span>      
+                </th>
+                <th>
+                    <span class="slds-truncate" title="Annual Revenue">Annual Revenue</span>
+                </th>
+                <th>       
+                    <span class="slds-truncate" title="Website">Website</span>
+                </th>
+                <th >
+                    <div class="slds-truncate" title="Active">Active</div>
+                </th>
+            </tr>
+        </thead>
+        <!--table body start, 
+         Iterate account list as a <tr>
+         -->
+        <tbody>
+            <aura:iteration items="{!v.ListOfAccount}" var="acc">
+                <tr>
+                    <td scope="row" class="slds-text-align--right" style="width:3.25rem;">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__control">
+                                <label class="slds-checkbox">
+                                    <ui:inputCheckbox text="{!acc.Id}" aura:id="boxPack" value="" change="{!c.checkboxSelect}"/>
+                                    <span class="slds-checkbox--faux"></span>
+                                    <span class="slds-form-element__label text"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </td>
+                    <td scope="row">
+                        <a href="{!'/one/one.app?#/sObject/'+ acc.Id + '/view'}" target="_blank">{! acc.Name }</a>
+                    </td>
+                    <td scope="row">
+                        <div class="slds-truncate" title="{!acc.AnnualRevenue}">{!acc.AnnualRevenue}</div>
+                    </td>
+                    <td scope="row">
+                        <div class="slds-truncate" title="{!acc.Website}">{!acc.Website}</div>
+                    </td>
+                    <td scope="row">
+                        <div class="slds-truncate" title="{!acc.Active__c}">{!acc.Active__c}</div>
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>		
+</aura:component>

@@ -1,0 +1,20 @@
+<aura:component controller="NewSubmitForm" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="firstName" type="String"/>
+    <aura:attribute name="phoneNumber" type="String"/>
+    <div>
+        <lightning:layout class="slds-page-header slds-page-header--object-home">
+		
+        <lightning:layoutItem>
+            
+            <div class="row">
+                <ui:inputText label="Name" class="form-control" value="{!v.firstName}"></ui:inputText>
+                <ui:inputText label="Phone" class="form-control" value="{!v.phoneNumber}"></ui:inputText>
+               <!-- <lightning:input aura:id="clientName" label="Enter a Name" />
+                <lightning:input aura:id="phoneNo" label="Enter Phone number"/>-->
+                <lightning:button variant="base" label="Save" onclick="{! c.handleClick }"/>
+            </div>
+            </lightning:layoutItem>
+        
+          </lightning:layout>
+    </div>
+</aura:component>

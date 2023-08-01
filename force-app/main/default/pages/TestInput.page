@@ -1,0 +1,12 @@
+<apex:page controller="TestInputController">
+  <apex:form >
+      <apex:pageBlock >
+          
+          <apex:pageBlockSection title="Test">
+              
+              <apex:inputText value="{!testvalue}" />
+              <apex:commandButton action="{!testValueData}" value="Save"/>
+          </apex:pageBlockSection>
+      </apex:pageBlock>
+  </apex:form>
+</apex:page>

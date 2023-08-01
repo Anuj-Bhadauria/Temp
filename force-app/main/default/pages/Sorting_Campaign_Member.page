@@ -1,0 +1,46 @@
+<apex:page standardController="Campaign" extensions="CreatingNewCampaignMember">
+    <apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" />
+    <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.17.8/js/jquery.tablesorter.min.js" />
+    <apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.17.8/css/theme.blue.css" />
+    <Script>    
+        function confirmDelete(){    //it is called by an delete link or button and show alert with ok and cancel button if press ok then it redirects to a method in controller.
+            if(confirm('Are you sure?'))
+                return true;
+                return false;
+        };
+        $(document).ready(function(){
+            $("[id$='campMemberTable']").tablesorter({theme: 'blue', dateFormat : "dd/mm/yyyy"});
+        });        
+    </Script>
+    <apex:form >
+    <apex:pageBlock title="Campaign Member">
+        <apex:pageblockbuttons location="top">
+            <apex:commandButton value="Add New" onclick="window.open('/apex/Add_New_Campaign_Member')"/>                       
+        </apex:pageblockbuttons>
+        <apex:pageBlockTable value="{!campMembrList}" var="list" rendered="{!NOT(campMembrList.empty)}" id="campMemberTable" styleclass="tablesorter">
+            <apex:column >
+                <apex:facet name="header">Action</apex:facet>
+                <apex:outputPanel >  
+                    <div><a class="Mylinks" href="/{!list.id}/e?retURL=%2F{!list.campaignId}" title="Edit - Record - - {!list.type}" style="cursor: pointer" target="_top">Edit</a> | <apex:commandLink title="Remove - Record - - {!list.type}" value="Remove" onclick="return confirm('Are you sure?')" action="{!DelCampMember}" style="cursor: pointer" target="_top"><apex:param name="removeMemberId" value="{!list.Id}" assignTo="{!deleteCampMemberId}" /></apex:commandLink></div>
+                </apex:outputPanel>                                                           
+            </apex:column>
+            <apex:column >
+            <apex:facet name="header">Type</apex:facet>
+                 <apex:outputPanel > 
+                 <div><a class="Mylinks" href="/{!list.contactId}" style="cursor: pointer" target="_top">{!list.type}</a></div>
+                 </apex:outputPanel>
+            </apex:column>      
+            <apex:column value="{!list.status}"/>          
+            <apex:column value="{!list.firstname}"/>  
+            <apex:column > 
+                 <apex:facet name="header">Last Name</apex:facet>
+                 <apex:outputPanel > 
+                 <div><a class="Mylinks" href="/{!list.id}" style="cursor: pointer" target="_top">{!list.lastname}</a></div>
+                 </apex:outputPanel>
+             </apex:column>        
+            <apex:column value="{!list.title}"/>
+            <apex:column value="{!list.CompanyOrAccount}"/>          
+    </apex:pageBlockTable>
+    </apex:pageBlock>     
+   </apex:form>     
+</apex:page>

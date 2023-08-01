@@ -1,0 +1,487 @@
+<aura:component controller="MergeContactLightningController" implements="lightning:isUrlAddressable,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    <aura:attribute name="AccIDFromVfPage" type="string"/>    
+    <aura:attribute name="checkboxesChecked" type="List" access="global"/>
+    <aura:attribute name="contactData" type="List"/>
+    
+    <aura:attribute name="masterContactId" type="Id"/>
+    <aura:attribute name="secondContactId" type="Id"/>
+    <aura:attribute name="thirdContId" type="Id"/>		
+    
+    <aura:attribute name="masterRecId" type="Id"/>		
+    
+    <aura:attribute name="contactName1" type="String"/>
+    <aura:attribute name="contactF1L1" type="String"/>
+    
+    <aura:attribute name="contactName2" type="String"/>
+    <aura:attribute name="contactF2L2" type="String"/>
+    
+    <aura:attribute name="contactName3" type="String"/>
+    <aura:attribute name="contactF3L3" type="String"/>
+    
+    
+    <aura:attribute name="masterCon" type="String" default="Main"/>
+    <aura:attribute name="selectAll" type="String" default="Main"/>
+    
+    
+    <aura:attribute name="selectedRadios" type="String[]"/>
+    
+    <aura:handler   name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent  name="compTwoEventFired" type="c:compTwoToParent"></aura:registerEvent >
+    
+    <aura:registerEvent  name="componentEventFired" type="c:MergeContactLightningEvt"></aura:registerEvent >
+    
+    <article class="slds-card slds-p-around_small">
+        <div class="slds-card__header slds-grid slds-wrap">
+            <div >              
+                <div class="slds-size_12-of-12">
+                    <div class="slds-media slds-media_responsive slds-p-around_x-small">
+                        <header class="slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media slds-no-space slds-grow slds-size_2-of-6">
+                                <div class="slds-media__figure">
+                                    <div class="slds-icon_container slds-icon-standard-contact" title="contact">
+                                        <lightning:icon iconName="standard:contact" size="medium" />                                        
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-size_4-of-6">
+                                    <h1 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate slds-p-around_xx-small" title="Merge My Contacts">Merge My Contacts</h1>
+                                </div></div>
+                        </header>
+                    </div>
+                </div> 
+                <div class="slds-grid slds-col slds-p-around_x-small">                    
+                    <div class="strip slds-p-around_x-small slds-size--1-of-2 slds-medium-size--5-of-6 slds-large-size--8-of-12"><h2> <b > Step 2. Select the values to retain</b></h2></div>
+                    <div class="strip slds-p-around_x-small slds-text-align_right slds-size--1-of-2 slds-medium-size--1-of-6 slds-large-size--4-of-12"><h2> <b > Step 2 of 3 </b></h2></div>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-p-around_x-small"><span>Select the values that you want to retain in the merged record. Highlighted rows indicate fields that contain conflicting data. The Master Record selected will retain read-only and hidden field values. The oldest Created By date and user will be retained in the merged record.</span>
+                        <br/>
+                        <span>Note: Activities, Notes, Attachments, Cases, Opportunities, and Campaign History related to these Contacts will be associated with the resulting merged record.</span></div>
+                </div>
+            </div>
+            <div class="slds-align_absolute-center">
+                <lightning:button title="Previous" class="slds-button slds-button_brand"  onclick="{!c.onPrevious}">Previous</lightning:button>
+                <lightning:button title="Merge" class="slds-button slds-button_brand"  onclick="{!c.onMerge}">Merge</lightning:button>
+                <lightning:button title="Cancel" class="slds-button slds-button_brand" onclick="{!c.onCancel}">Cancel</lightning:button>
+            </div>
+            <div class="slds-card__body slds-card__body_inner" style="width:100%">                
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered" >
+                    <thead>
+                        <tr class="slds-line-height_reset">                            
+                            <th scope="col" class="thcss" style="width: 20%;">
+                                <div class="slds-grid slds-size--4-of-4" title="ContactLabels"></div>
+                            </th>
+                            <th scope="col" class="thcss">
+                                <div class="slds-grid slds-size--4-of-4">
+                                    <div class="slds-size--1-of-4">
+ 										<aura:if isTrue="{!v.selectAll=='Main'}">
+                                        	<lightning:input type="radio" value="Main" id="rd" aura:id="button1"  name="{!v.masterContactId}" onchange="{!c.SelectAll}" checked="true"/>
+                                        	<aura:set attribute="else">
+                                            	<lightning:input type="radio" value="Main" id="rd" aura:id="button1"  name="{!v.masterContactId}" onchange="{!c.SelectAll}" checked="false"/>   
+                                            </aura:set>
+                                        </aura:if>                                           
+                                    </div>
+                                    <div class="slds-size--3-of-4">
+                                        {!v.contactName1}
+                                    </div>
+                                </div>                                
+                            </th>
+                            <th scope="col" class="thcss">
+                                <div class="slds-grid slds-size--4-of-4">
+                                    <div class="slds-size--1-of-4">
+                                        <aura:if isTrue="{!v.selectAll=='child'}">
+                                        	<lightning:input type="radio" value="child" id="rd1" aura:id="button2"  name="{!v.secondContactId}" onchange="{!c.SelectAll}" checked="true"/>
+                                            <aura:set attribute="else">
+                                            	<lightning:input type="radio" value="child" id="rd1" aura:id="button2"  name="{!v.secondContactId}" onchange="{!c.SelectAll}" checked="false"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                    <div class="slds-size--3-of-4">
+                                        {!v.contactName2}
+                                    </div>
+                                </div>
+                            </th>
+                            <aura:if isTrue="{!v.checkboxesChecked.length>2}">
+                                <th  scope="col" class="thcss">
+                                    <div class="slds-grid slds-size--4-of-4">
+                                        <div class=" slds-col slds-size--1-of-4">
+                                            <aura:if isTrue="{!v.selectAll=='child2'}">
+                                            	<lightning:input type="radio" value="child2" id="rd2"  aura:id="button3" name="{!v.thirdContId}"  onchange="{!c.SelectAll}" checked="true"/>
+                                            	<aura:set attribute="else">
+                                                	<lightning:input type="radio" value="child2" id="rd2"  aura:id="button3" name="{!v.thirdContId}"  onchange="{!c.SelectAll}" checked="false"/>
+                                                </aura:set>    
+                                            </aura:if>
+                                            
+                                        </div>
+                                        <div class="slds-col slds-size--3-of-4">
+                                            {!v.contactName3}
+                                        </div>
+                                    </div>
+                                </th>
+                            </aura:if>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="thcss">
+                                <div class="slds-grid slds-size--4-of-4 ">
+                                    <b>Name</b>    
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-grid slds-size--4-of-4 ">
+                                    <div class="slds-size--1-of-4">
+                                        <aura:if isTrue="{!v.selectAll=='Main'}">   
+                                            <lightning:input type="radio"  value="{!v.contactF1L1}" name="Name" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                            <aura:set attribute="else">
+                                                <lightning:input type="radio"  value="{!v.contactF1L1}" name="Name" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                    <div class="slds-size--3-of-4">
+                                        {!v.contactName1}                                        
+                                    </div>    
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-grid slds-size--4-of-4 ">
+                                    <div class="slds-size--1-of-4">
+                                        <aura:if isTrue="{!v.selectAll=='child'}"> 
+                                            <lightning:input type="radio" value="{!v.contactF2L2}"  name="Name" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                            <aura:set attribute="else">
+                                                <lightning:input type="radio" value="{!v.contactF2L2}"  name="Name" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                    <div class="slds-size--3-of-4">
+                                        {!v.contactName2}                                        
+                                    </div>    
+                                </div>
+                            </td>
+                            <td>
+                                <aura:if isTrue="{!v.checkboxesChecked.length>2}">
+                                    <div class="slds-grid slds-size--4-of-4 ">
+                                        <div class="slds-size--1-of-4">
+                                            <aura:if isTrue="{!v.selectAll=='child2'}"> 
+                                                <lightning:input type="radio" value="{!v.contactF3L3}" name="Name" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                <aura:set attribute="else">
+                                                    <lightning:input type="radio" value="{!v.contactF3L3}" name="Name" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                </aura:set>
+                                            </aura:if>
+                                        </div>
+                                        <div class="slds-size--3-of-4">
+                                            {!v.contactName3}                                            
+                                        </div>   
+                                    </div>
+                                </aura:if>
+                            </td>                            
+                        </tr>
+                        <aura:iteration items="{!v.contactData}"  var="con">
+                            <aura:iteration items="{!con.fieldWrapper}"  var="fld">                                
+                                <aura:if isTrue="{! and(and(and(notequals(fld.labels,'Account ID') , notequals(fld.labels,'Owner ID')),notequals(fld.labels,'Last Name')),notequals(fld.labels,'First Name'))}">
+                                    <tr class="slds-hint-parent"> 
+                                        <td class="thcss">
+                                            <div class="slds-grid slds-size--4-of-4 ">
+                                                <b> {!fld.labels}</b>    
+                                            </div>
+                                        </td> 
+                                        <aura:if isTrue="{!v.checkboxesChecked.length>2}">
+                                            <aura:if isTrue="{!or(or(and(equals(fld.contactValue1,fld.contactValue2),equals(fld.contactValue1,fld.contactValue3)),equals(fld.labels,'Created By')),equals(fld.labels,'Last Modified By'))}">
+                                                <td>                                         
+                                                    <div class="slds-grid slds-size--4-of-4 ">
+                                                        <aura:if isTrue="{!fld.contactValue1 =='true' || fld.contactValue1 =='false'}">                                                            
+                                                            <input type="checkbox" name="options" id="checkbox-unique-id-73" value="checkbox-unique-id-73" disabled="true" />
+                                                            <aura:set attribute="else">
+                                                                <div class="slds-col slds-size--1-of-4">                                                                
+                                                                    <aura:if isTrue="{!fld.labels=='Master Record'}">
+                                                                        <aura:if isTrue="{!v.selectAll=='Main'}">                                                            
+                                                                            <lightning:input type="radio"   value="Main" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                            <aura:set  attribute="else">
+                                                                                <lightning:input type="radio"  value="Main" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                    </aura:if>                                                           
+                                                                </div>
+                                                                <span class="slds-truncate" title="{!fld.contactValue1}">{!fld.contactValue1}</span>
+                                                            </aura:set>                                                            
+                                                        </aura:if>
+                                                    </div>
+                                                </td>
+                                                <td>                                         
+                                                    <div class="slds-grid slds-size--4-of-4 ">
+                                                        <aura:if isTrue="{!fld.contactValue2 =='true' || fld.contactValue2 =='false'}">                                                            
+                                                            <input type="checkbox" name="options" id="checkbox-unique-id-73" value="checkbox-unique-id-73" disabled="true" />
+                                                            <aura:set attribute="else">
+                                                                <div class="slds-col slds-size--1-of-4">
+                                                                    <aura:if isTrue="{!fld.labels=='Master Record'}">
+                                                                        <aura:if isTrue="{!v.selectAll=='child'}">                                                            
+                                                                            <lightning:input type="radio"  value="child" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                            <aura:set  attribute="else">
+                                                                                <lightning:input type="radio" value="child" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                    </aura:if>              
+                                                                </div>
+                                                                <span class="slds-truncate" title="{!fld.contactValue2}">{!fld.contactValue2}</span>
+                                                            </aura:set>              
+                                                        </aura:if>
+                                                    </div>
+                                                </td>
+                                                <aura:if isTrue="{!v.checkboxesChecked.length>2}">
+                                                    <td>                                         
+                                                        <div class="slds-grid slds-size--4-of-4 ">
+                                                            <aura:if isTrue="{!fld.contactValue3 =='true' || fld.contactValue3 =='false'}">                                                            
+                                                                <input type="checkbox" name="options" id="checkbox-unique-id-73" value="checkbox-unique-id-73" disabled="true" />
+                                                                <aura:set attribute="else">
+                                                                    <div class="slds-col slds-size--1-of-4">
+                                                                        <aura:if isTrue="{!fld.labels=='Master Record'}">
+                                                                            <aura:if isTrue="{!v.selectAll=='child2'}">                                                            
+                                                                                <lightning:input type="radio" value="child2"  name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                                <aura:set  attribute="else">
+                                                                                    <lightning:input type="radio" value="child2" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                        </aura:if>  
+                                                                    </div>
+                                                                    <span class="slds-truncate" title="{!fld.contactValue3}">{!fld.contactValue3}</span>
+                                                                </aura:set>              
+                                                            </aura:if>
+                                                        </div>
+                                                    </td>
+                                                </aura:if>
+                                                <aura:set attribute="else">                                                    
+                                                    <td>                                         
+                                                        <div class="slds-grid slds-size--4-of-4 ">
+                                                            <aura:if isTrue="{!not(empty(fld.contactValue1))}">
+                                                                <div class="slds-col slds-size--1-of-4">                                                  
+                                                                    <aura:if isTrue="{!fld.contactValue1 =='true' || fld.contactValue1 =='false'}">                                                            
+                                                                        <input type="checkbox" name="options" id="checkbox-unique-id-73" value="checkbox-unique-id-73" disabled="true" />
+                                                                        <aura:set  attribute="else">
+                                                                            <aura:if isTrue="{!v.selectAll=='Main'}">                                                            
+                                                                                <lightning:input type="radio"  value="{!fld.contactValue1}" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                                <aura:set  attribute="else">
+                                                                                    <lightning:input type="radio"  value="{!fld.contactValue1}" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                        </aura:set>
+                                                                    </aura:if>                                                                    
+                                                                </div>
+                                                                <aura:if isTrue="{!fld.contactValue1 =='true' || fld.contactValue1 =='false'}">
+                                                                    <span></span>
+                                                                    <aura:set  attribute="else">
+                                                                        <span class="slds-truncate" title="{!fld.contactValue1}">{!fld.contactValue1}</span>
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                                <aura:set  attribute="else">
+                                                                    <aura:if isTrue="{!fld.labels=='Master Record'}">
+                                                                        <aura:if isTrue="{!v.selectAll=='Main'}">                                                            
+                                                                            <lightning:input type="radio"  value="Main" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                            <aura:set  attribute="else">
+                                                                                <lightning:input type="radio"  value="Main" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                    </aura:if>
+                                                                </aura:set>
+                                                            </aura:if>
+                                                        </div>                                        
+                                                    </td>
+                                                    <td>
+                                                        <div class="slds-grid slds-size--4-of-4 ">
+                                                            <aura:if isTrue="{!not(empty(fld.contactValue2))}">
+                                                                <div class="slds-col slds-size--1-of-4">
+                                                                    <aura:if isTrue="{!fld.contactValue2 =='true' || fld.contactValue2 =='false'}">                                                            
+                                                                        <input type="checkbox" name="options" id="checkbox-unique-id-73" value="checkbox-unique-id-73" disabled="true" />
+                                                                        <aura:set  attribute="else">
+                                                                            <aura:if isTrue="{!v.selectAll=='child'}">
+                                                                                <lightning:input type="radio"  value="{!fld.contactValue2}"  name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                                <aura:set  attribute="else">
+                                                                                    <lightning:input type="radio" value="{!fld.contactValue2}" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                        </aura:set>
+                                                                    </aura:if>                                                        
+                                                                </div>
+                                                                <aura:if isTrue="{!fld.contactValue2 =='true' || fld.contactValue2 =='false'}">
+                                                                    <span></span>
+                                                                    <aura:set  attribute="else">
+                                                                        <span class="slds-truncate" title="{!fld.contactValue2}">{!fld.contactValue2}</span>
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                                <aura:set  attribute="else">
+                                                                    <aura:if isTrue="{!fld.labels=='Master Record'}">
+                                                                        <aura:if isTrue="{!v.selectAll=='child'}">
+                                                                            <lightning:input type="radio" value="child"  name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                            <aura:set  attribute="else">
+                                                                                <lightning:input type="radio"  value="child" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                    </aura:if>
+                                                                </aura:set>
+                                                            </aura:if>
+                                                        </div>                                        
+                                                    </td>
+                                                    <aura:if isTrue="{!v.checkboxesChecked.length>2}">
+                                                        <td>
+                                                            <div class="slds-grid slds-size--4-of-4">
+                                                                <aura:if isTrue="{!not(empty(fld.contactValue3))}">
+                                                                    <div class="slds-col slds-size--1-of-4">
+                                                                        <aura:if isTrue="{!fld.contactValue3 =='true' || fld.contactValue3 =='false'}">                                                            
+                                                                            <input type="checkbox" name="options" id="checkbox-unique-id-73" value="checkbox-unique-id-73" disabled="true" />
+                                                                            <aura:set  attribute="else">
+                                                                                <aura:if isTrue="{!v.selectAll=='child2'}">
+                                                                                    <lightning:input type="radio" value="{!fld.contactValue3}"  name="{!fld.apinames}"  onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                                    <aura:set  attribute="else">
+                                                                                        <lightning:input type="radio"  value="{!fld.contactValue3}" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                                    </aura:set>
+                                                                                </aura:if>
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                    </div>
+                                                                    <aura:if isTrue="{!fld.contactValue3 =='true' || fld.contactValue3 =='false'}">
+                                                                        <span></span>
+                                                                        <aura:set  attribute="else">
+                                                                            <span class="slds-truncate" title="{!fld.contactValue3}">{!fld.contactValue3}</span>
+                                                                        </aura:set>
+                                                                    </aura:if>
+                                                                    <aura:set  attribute="else">
+                                                                        <aura:if isTrue="{!fld.labels=='Master Record'}">
+                                                                            <aura:if isTrue="{!v.selectAll=='child2'}">
+                                                                                <lightning:input type="radio" value="child2"  name="{!fld.apinames}"  onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                                <aura:set  attribute="else">
+                                                                                    <lightning:input type="radio" value="child2" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                        </aura:if>
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                            </div>
+                                                        </td>                                                    
+                                                    </aura:if>
+                                                </aura:set>
+                                            </aura:if>
+                                            <aura:set attribute="else">
+                                                <aura:if isTrue="{!or(or(equals(fld.contactValue1,fld.contactValue2),equals(fld.labels,'Created By')),equals(fld.labels,'Last Modified By'))}">
+                                                    <td>                                         
+                                                        <div class="slds-grid slds-size--4-of-4 ">
+                                                            <aura:if isTrue="{!fld.contactValue1 =='true' || fld.contactValue1 =='false'}">                                                            
+                                                                <input type="checkbox" name="options" id="checkbox-unique-id-73" value="checkbox-unique-id-73" disabled="true" />
+                                                                <aura:set attribute="else">
+                                                                    <div class="slds-col slds-size--1-of-4">                                                                
+                                                                        <aura:if isTrue="{!fld.labels=='Master Record'}">
+                                                                            <aura:if isTrue="{!v.selectAll=='Main'}">                                                            
+                                                                                <lightning:input type="radio"   value="Main" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                                <aura:set  attribute="else">
+                                                                                    <lightning:input type="radio"  value="Main" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                        </aura:if>                                                           
+                                                                    </div>
+                                                                    <span class="slds-truncate" title="{!fld.contactValue1}">{!fld.contactValue1}</span>
+                                                                </aura:set>                                                                
+                                                            </aura:if>
+                                                        </div>
+                                                    </td>
+                                                    <td>                                         
+                                                        <div class="slds-grid slds-size--4-of-4 ">
+                                                            <aura:if isTrue="{!fld.contactValue2 =='true' || fld.contactValue2 =='false'}">                                                            
+                                                                <input type="checkbox" name="options" id="checkbox-unique-id-73" value="checkbox-unique-id-73" disabled="true" />
+                                                                <aura:set attribute="else">
+                                                                    <div class="slds-col slds-size--1-of-4">
+                                                                        <aura:if isTrue="{!fld.labels=='Master Record'}">
+                                                                            <aura:if isTrue="{!v.selectAll=='child'}">                                                            
+                                                                                <lightning:input type="radio"  value="child" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                                <aura:set  attribute="else">
+                                                                                    <lightning:input type="radio" value="child" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                        </aura:if>              
+                                                                    </div>
+                                                                    <span class="slds-truncate" title="{!fld.contactValue2}">{!fld.contactValue2}</span>
+                                                                </aura:set>              
+                                                            </aura:if>
+                                                        </div>
+                                                    </td>                                                    
+                                                    <aura:set attribute="else">                                                        
+                                                        <td>                                         
+                                                            <div class="slds-grid slds-size--4-of-4 ">
+                                                                <aura:if isTrue="{!not(empty(fld.contactValue1))}">
+                                                                    <div class="slds-col slds-size--1-of-4">                                                  
+                                                                        <aura:if isTrue="{!fld.contactValue1 =='true' || fld.contactValue1 =='false'}">                                                            
+                                                                            <input type="checkbox" name="options" id="checkbox-unique-id-73" value="checkbox-unique-id-73" disabled="true" />
+                                                                            <aura:set  attribute="else">
+                                                                                <aura:if isTrue="{!v.selectAll=='Main'}">                                                            
+                                                                                    <lightning:input type="radio"  value="{!fld.contactValue1}" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                                    <aura:set  attribute="else">
+                                                                                        <lightning:input type="radio"  value="{!fld.contactValue1}" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                                    </aura:set>
+                                                                                </aura:if>
+                                                                            </aura:set>
+                                                                        </aura:if>                                                                        
+                                                                    </div>
+                                                                    <aura:if isTrue="{!fld.contactValue1 =='true' || fld.contactValue1 =='false'}">
+                                                                        <span></span>
+                                                                        <aura:set  attribute="else">
+                                                                            <span class="slds-truncate" title="{!fld.contactValue1}">{!fld.contactValue1}</span>
+                                                                        </aura:set>
+                                                                    </aura:if>
+                                                                    <aura:set  attribute="else">
+                                                                        <aura:if isTrue="{!fld.labels=='Master Record'}">
+                                                                            <aura:if isTrue="{!v.selectAll=='Main'}">                                                            
+                                                                                <lightning:input type="radio"  value="Main" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                                <aura:set  attribute="else">
+                                                                                    <lightning:input type="radio"  value="Main" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                        </aura:if>
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                            </div>                                        
+                                                        </td>
+                                                        <td>
+                                                            <div class="slds-grid slds-size--4-of-4 ">
+                                                                <aura:if isTrue="{!not(empty(fld.contactValue2))}">
+                                                                    <div class="slds-col slds-size--1-of-4">
+                                                                        <aura:if isTrue="{!fld.contactValue2 =='true' || fld.contactValue2 =='false'}">                                                            
+                                                                            <input type="checkbox" name="options" id="checkbox-unique-id-73" value="checkbox-unique-id-73" disabled="true" />
+                                                                            <aura:set  attribute="else">
+                                                                                <aura:if isTrue="{!v.selectAll=='child'}">
+                                                                                    <lightning:input type="radio"  value="{!fld.contactValue2}"  name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                                    <aura:set  attribute="else">
+                                                                                        <lightning:input type="radio" value="{!fld.contactValue2}" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                                    </aura:set>
+                                                                                </aura:if>
+                                                                            </aura:set>
+                                                                        </aura:if>                                                        
+                                                                    </div>
+                                                                    <aura:if isTrue="{!fld.contactValue2 =='true' || fld.contactValue2 =='false'}">
+                                                                        <span></span>
+                                                                        <aura:set  attribute="else">
+                                                                            <span class="slds-truncate" title="{!fld.contactValue2}">{!fld.contactValue2}</span>
+                                                                        </aura:set>
+                                                                    </aura:if>
+                                                                    <aura:set  attribute="else">
+                                                                        <aura:if isTrue="{!fld.labels=='Master Record'}">
+                                                                            <aura:if isTrue="{!v.selectAll=='child'}">
+                                                                                <lightning:input type="radio" value="child"  name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="true"/>
+                                                                                <aura:set  attribute="else">
+                                                                                    <lightning:input type="radio"  value="child" name="{!fld.apinames}" onchange="{!c.UpdateMasterRecord}" checked="false"/>
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                        </aura:if>
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                            </div>                                        
+                                                        </td>                                                        
+                                                    </aura:set>
+                                                </aura:if>
+                                            </aura:set>
+                                        </aura:if>
+                                    </tr>
+                                </aura:if>
+                            </aura:iteration>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </article>
+</aura:component>

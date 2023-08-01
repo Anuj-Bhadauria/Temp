@@ -1,0 +1,127 @@
+<aura:component controller="BuildMergeContact" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doOnLoad}"/>
+    
+    <aura:attribute name="contactIdList" type="List" access="global"/>
+    <aura:attribute name="masterId" type="Id" access="global"/>
+    
+    <aura:attribute name="term" type="String" />
+    <aura:attribute name="allOptionsDuplicate" type="List" default="[]"/>	
+    <aura:attribute name="RelatedList" type="List" default="[]"/>
+    <aura:attribute name="rightValues" type="List" default="[]"/> 
+    <aura:attribute name="selectedList" type="List" default="[]"/>
+    <aura:attribute name="selectedInRightList" type="List" default="[]"/>
+    <aura:attribute name="highlightedItem" type="Object" description="an item ready to be transferred to the selectedValues array" access="private" />
+    <aura:attribute name="highlightedItems" type="Object[]" description="a set of items ready to be transferred to the selectedValues array" access="private" />
+    
+    <aura:handler name="applicationEvntExm" event="c:MergeContactEVt" action="{!c.getListOfConIds}"/>
+    
+    
+    <aura:registerEvent  name="mergeContMaterEvent" type="c:mergeContactMasterEvt"></aura:registerEvent >
+    
+    
+    <article class="slds-card slds-p-around_small">
+        
+    <lightning:card variant="Narrow">
+        <div class="slds-size_12-of-12">
+                    <div class="slds-media slds-media_responsive slds-p-around_x-small">
+                        <header class="slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media slds-no-space slds-grow slds-size_2-of-6">
+                                <div class="slds-media__figure">
+                                    <div class="slds-icon_container slds-icon-standard-contact" title="contact">
+                                        <lightning:icon iconName="standard:contact" size="medium" />                                        
+                                    </div>
+                                </div>
+                                <div class="slds-media__body slds-size_4-of-6">
+                                    <h1 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate slds-p-around_xx-small" title="Merge My Contacts">Merge My Contacts</h1>
+                                </div></div>
+                        </header>
+                    </div>
+                </div> 
+        <div class="slds-grid slds-col">                    
+            <div class="strip slds-p-around_x-small slds-size--1-of-2 slds-medium-size--5-of-6 slds-large-size--8-of-12"><h2> <b > Step 3. Select the records to merge</b></h2></div>
+            <div class="strip slds-p-around_x-small slds-text-align_right slds-size--1-of-2 slds-medium-size--1-of-6 slds-large-size--4-of-12"><h2> <b > Step 3 of 3 </b></h2></div>
+        </div>
+        <br/>
+        <div class="slds-p-around_xxx-small"><span> Please Select the Objects that you wish to merge . Use the "Filter" feature to search for specific objects associated with contacts that you wish to merge.</span>
+        </div>
+        <br/>
+        <div class="slds-align_absolute-center">
+            <lightning:button title="Previous" class="slds-button slds-button_brand"  onclick="{!c.onPrevious}">Previous</lightning:button> 
+        </div>
+        
+        <div class="slds-align_absolute-center">
+            <lightning:input type="text" value="{!v.term}" aura:id="fString" label="Filter" placeholder="Search" onchange="{!c.searchNow}" style="width: 500px;"/>
+        </div>
+        <div class="slds-align_absolute-center">
+            <div class="slds-form-element" role="group" aria-labelledby="picklist-group-label">
+                <span id="picklist-group-label" class="slds-form-element__label slds-form-element__legend">Select Options</span>
+                <div class="slds-form-element__control">
+                    <div class="slds-dueling-list">
+                        <div class="slds-assistive-text" id="drag-live-region" aria-live="assertive"></div>
+                        <div class="slds-assistive-text" id="option-drag-label">Press space bar when on an item, to move it within the list. CMD plus left and right arrow keys, to move items between lists.</div>
+                        <div class="slds-dueling-list__column " >
+                            <span class="slds-form-element__label" id="label-107">Available Objects</span>
+                            <div class="slds-dueling-list__options" aura:id="items"  role="application">
+                                <ul aria-describedby="option-drag-label" aria-multiselectable="false" class="slds-listbox slds-listbox_vertical" 
+                                    role="listbox" tabindex="0">
+                                    <aura:iteration items="{!v.RelatedList}" var="item">
+                                        <li class="{!if(item.selected,'slds-listbox__item Selected','slds-listbox__item')}" 
+                                            role="presentation" onclick="{!c.handleListClickL2R}" data-value="{!item.value}" data-selected="{!item.label}" tabindex="{!item.sort}">
+                                            <div aura:id="{!item.value}" class="slds-listbox__option slds-listbox__option_plain slds-media slds-media_small slds-media_inline" aria-selected="false" draggable="true" role="option" tabindex="-1">
+                                                <span class="slds-media__body">
+                                                    <option text="{!item.label}" value="{!item.value}"/>
+                                                </span>
+                                            </div>
+                                        </li>
+                                    </aura:iteration>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-dueling-list__column">
+                            <button class="slds-button slds-button_icon-container slds-button_icon-small" title="Right" onclick="{!c.moveLeftToRight}">
+                                <lightning:icon iconName="utility:right" size="small" class="slds-button__icon slds-button__icon_large" />
+                                <span class="slds-assistive-text">Move Selection to First Category</span>
+                            </button>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <button class="slds-button slds-button_icon-container slds-button_icon-small" title="Left" onclick="{!c.moveRightToLeft}">
+                                <lightning:icon iconName="utility:left" size="small" class="slds-button__icon slds-button__icon_large" />
+                                <span class="slds-assistive-text">Move Selection to Second Category</span>
+                            </button>
+                        </div>
+                        
+                        <div class="slds-dueling-list__column">
+                            <span class="slds-form-element__label" >Selected Objects</span>
+                            <div class="slds-dueling-list__options">
+                                <ul aria-describedby="option-drag-label" aria-multiselectable="false" class="slds-listbox slds-listbox_vertical" 
+                                    role="listbox" tabindex="0">
+                                    <aura:iteration items="{!v.rightValues}" var="item">
+                                        <li class="{!if(item.selected,'slds-listbox__item Selected','slds-listbox__item')}" 
+                                            role="presentation" onclick="{!c.handleListClickR2L}" data-value="{!item.value}" data-selected="{!item.label}" tabindex="{!item.sort}">
+                                            <div class="slds-listbox__option slds-listbox__option_plain slds-media slds-media_small slds-media_inline" aria-selected="false" draggable="true" role="option" tabindex="-1">
+                                                <span class="slds-media__body">
+                                                    <option text="{!item.label}" value="{!item.value}"/>
+                                                </span>
+                                            </div>
+                                        </li>
+                                    </aura:iteration>
+                                </ul>
+                            </div>
+                        </div>
+                        <br/> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br/>
+        <div class="slds-align_absolute-center">
+            <lightning:button variant="brand" label="Next" onclick = "{!c.nextButton}"/>
+        </div>
+    </lightning:card>
+        
+    </article>
+    
+</aura:component>

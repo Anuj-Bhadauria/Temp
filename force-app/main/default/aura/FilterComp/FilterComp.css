@@ -1,0 +1,10 @@
+.THIS .multiple{
+    height:100px;
+    width : 200px;
+}
+.THIS .slds{
+    width : 200px;
+}
+.THIS .form-wrap .slds-form-element {
+    padding: 4px 8px;
+}

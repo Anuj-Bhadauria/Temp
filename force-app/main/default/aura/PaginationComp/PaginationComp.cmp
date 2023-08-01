@@ -1,0 +1,82 @@
+<aura:component controller="FirstLightningController" implements="flexipage:availableForAllPageTypes,force:hasRecordId" >
+	<ltng:require styles="{!join(',', 
+                          $Resource.SLDS105 + '/assets/styles/salesforce-lightning-design-system-vf.css', 
+                          $Resource.SLDS105 + '/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="c:FilterPaginationEvent" action="{!c.handleStoryFilterEvent}"/>
+    
+    <aura:attribute name="DisplayCSS" type="String" Default="None"></aura:attribute>
+    <aura:attribute name="SearchAccount" type="Account[]"></aura:attribute>
+    <aura:attribute name="OpportunityList" type="Opportunity[]"></aura:attribute>
+    <aura:attribute name="accListSize" type="Integer"/>
+    <aura:attribute name="limit" type="Integer" default="2"/>
+    <aura:attribute name="offset" type="Integer" default="0"/>
+    <aura:attribute name="accId" type="String"/>
+    <aura:attribute name="searchKey" type="String"/>
+    <aura:attribute name="Message" type="String" default="Search Result.."/>
+    <aura:attribute name="buttonShowHide" type="Boolean"/>
+    
+    
+    <div class="slds" Style="{!'Display:'+v.DisplayCSS}"> 
+        <div class="slds-grid slds-grid--align-center">
+           	<ui:button aura:id="text" class="toggle" label="next" disabled="{!v.buttonShowHide}" press="{!c.calculate}" ></ui:button> 
+        	<ui:button aura:id="text" class="toggle" label="previous" disabled="{!v.buttonShowHide}" press="{!c.prev}"></ui:button>
+          <!--  <div class="center-div">
+            	{!v.limit+v.offset} of {!v.accListSize}
+            </div>  -->
+        </div>
+        <br/>
+        <table class="slds-table slds-table--bordered slds-table--striped">
+            <thead>
+                <tr>
+                    <th bgcolor="#5D7B9D" color="#FFFFFF" scope="col"><span class="slds-truncate">Name</span></th>
+                    <th bgcolor="#5D7B9D" color="#FFFFFF" scope="col"><span class="slds-truncate">Amount</span></th>
+                	<th bgcolor="#5D7B9D" color="#FFFFFF" scope="col"><span class="slds-truncate">CloseDate</span></th>
+                	<th bgcolor="#5D7B9D" color="#FFFFFF" scope="col"><span class="slds-truncate">Account Name</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.OpportunityList}" var="oppt">
+                	<tr>
+                        <td>
+                            <ui:inputText value="{!oppt.Name}" />
+                        </td>
+                        <td>
+                            <ui:inputText value="{!oppt.Amount}"/>
+                            <aura:if isTrue="{!oppt.Amount > 2000}">
+                                <ui:message title="Error" severity="error" closable="true">
+                                    Amount cannot be greater than 2000.
+                                </ui:message>
+                            </aura:if>
+                        </td>
+                        <td>
+                            <ui:inputDate value="{!oppt.CloseDate}" displayDatePicker="true" />
+                        </td>
+                        <td>
+                            <div class="slds-form-element slds-lookup slds-is-open">
+                                <ui:inputText class="slds-input" aura:id="accountSearch" value="{!v.searchKey}" placeholder="{!oppt.Account.Name}" updateOn="keyup" keyup="{!c.searchAcc}"/>
+                            </div>
+                            <div class="slds-lookup__menu slds" id="lookup-348">
+                                <div class="slds-lookup__item--label slds-text-body--small">{!v.Message}</div>
+                                <center> <ui:spinner aura:id="spinner"/> </center>
+                                <ul class="slds-lookup__list" role="listbox">
+                                    <aura:iteration items="{!v.SearchAccount}" var="singleRec">
+                                        <li Style="cursor:pointer">
+                                        	<ui:outputText aura:id="{!singleRec.Id}" value="{!singleRec.Name}" click="{!c.selectedAccount}"/>
+                                        </li>
+                                            <!-- <c:customLookupResult oAccount="{!singleRec}" />  -->
+                                    </aura:iteration>
+                                </ul>
+                            </div> 
+                        </td>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+        <br/>
+        <div class="slds-form-element__control">
+            <ui:button class="slds-button" label="Save" press="{!c.saveFunction}"/>
+        </div>
+        
+    </div>
+</aura:component>

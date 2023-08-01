@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Event template" >
+    <aura:attribute name="ShowThirdComponent" type="Boolean" default="false"/>
+    <aura:attribute name="masterId" type="Id" />
+</aura:event>

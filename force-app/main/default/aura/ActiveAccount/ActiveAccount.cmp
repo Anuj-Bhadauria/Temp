@@ -1,0 +1,50 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="AccountListFetch">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="isShow" type="boolean" default="false"/>
+    <aura:attribute type="Account[]" name="acctList"/>
+    <aura:attribute name="SelectedAccount" type="String[]"/>    
+	
+    <aura:if isTrue="{!v.isShow}"> 
+        <lightning:button label="Neutral" title="Activate" onclick="{! c.handleClick }"/>
+              
+     </aura:if>
+    
+<table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead>
+            <tr class="slds-text-title_caps">
+                <th scope="col">
+                	<div class="slds-truncate" title="Account Name">Select</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Account Name">Account Name</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Account Name">Industry</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+         <aura:iteration items="{!v.acctList}" var="a">
+                <tr>
+                   <!-- <td>
+                        <ui:inputCheckbox aura:id="amCheckBox" label="" change="{!c.onCheck}"/>
+             </td>-->
+                    <td>
+                    <div class="slds-checkbox">
+                            <input type="checkbox" name="chk" id="{!a.Id}" onchange="{!c.onCheck}"/>                            
+                            <label class="slds-checkbox__label" for="{!a.Id}">
+                                <span class="slds-checkbox_faux"></span>                                
+                            </label>
+                        </div>
+                        </td>
+                    <td data-label="Account Name">
+                        <div class="slds-truncate" title="">{!a.Name}</div>
+                    </td>
+                    <td data-label="Industry">
+                        <div class="slds-truncate" title="">{!a.Industry}</div>
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+</aura:component>

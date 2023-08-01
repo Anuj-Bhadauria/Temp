@@ -1,0 +1,73 @@
+<!--MultiSelectPicklist.cmp-->
+<aura:component controller="SampleAuraController">
+   <!-- Component Parameters -->
+    <aura:attribute name="sObjectName"         type="String"  required="true" />
+    <aura:attribute name="fieldNamePicklist"     type="String"  required="true" />
+    <aura:attribute name="sourceLabelPicklist"   type="String"  required="true" 
+                    default="Available Values" />
+    <aura:attribute name="selectedLabelPicklist" type="String"  required="true" 
+                    default="Selected Values" /> 
+    
+    <aura:attribute name="fieldNameCheckbox"     type="String"  required="true" />
+    
+    <aura:attribute name="errorMessage"        type="String"  default="" />
+    <aura:attribute name="isDisabled"          type="Boolean" default="true" />
+    <aura:attribute name="isLoaded"          type="Boolean" default="false" />
+    
+    <aura:attribute name="listOptions"         type="List"    default="[]" />
+    <aura:attribute name="defaultOptions"      type="List"    default="[]" />
+    <aura:attribute name="requiredOptions"     type="List"    default="[]" />
+    
+    <aura:attribute name="checkboxOptions"     type="List"    default="[]" />
+    <aura:attribute name="checkboxValues"      type="List"    default="[]" />
+    
+    <!-- Events -->
+    <aura:handler name="init" value="{! this }" action="{! c.initialize }" />
+    
+    <div class="slds-box">
+        <aura:renderIf isTrue="{! v.isLoaded }"> 
+            <div class="checkboxgroup-center">
+                <div class="slds-form-element__control">
+                    <!-- Checkbox group -->
+                    <span class="slds-checkbox">
+                        <lightning:checkboxGroup aura:id="checkboxGroup"
+                                                 name="{! v.fieldNameCheckbox }"
+                                                 label=""
+                                                 options="{! v.checkboxOptions }"
+                                                 value="{! v.checkboxValues }"
+                                                 onchange="{! c.handleChange }"
+                                                 class="slds-checkbox"  />
+                    </span>
+                </div> 
+            </div>
+            
+            <!-- Dual pick list -->
+            <div class="slds-grid slds-grid_align-center"> 
+                <lightning:dualListbox aura:id="selectOptions"
+                                       label="" 
+                                       sourceLabel="{! v.sourceLabelPicklist }" 
+                                       selectedLabel="{! v.selectedLabelPicklist }" 
+                                       options="{! v.listOptions }"
+                                       value="{! v.defaultOptions }"
+                                       requiredOptions="{! v.requiredOptions }"
+                                       onchange="{! c.handleChange }" />
+            </div>
+            <!-- Dual pick list -->
+            
+            <div class="footer">
+                
+                <!-- Error messages from Apex -->
+                <ui:outputText title="error" class="errorMessage"
+                               value="{! v.errorMessage}" />
+                
+                <div class="buttonSection">            
+                    <!-- Save and Cancel button -->
+                    <lightning:button variant="neutral"     label="Cancel" 
+                                      onclick="{! c.cancel }"   disabled="{! v.isDisabled }" />
+                    <lightning:button variant="brand"       label="Save" 
+                                      onclick="{! c.save }"   disabled="{! v.isDisabled }" />
+                </div>
+            </div>
+        </aura:renderIf>
+    </div>
+</aura:component>

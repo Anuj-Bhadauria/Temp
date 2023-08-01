@@ -1,0 +1,37 @@
+<aura:component controller="WebToLeadController" implements="flexipage:availableForAllPageTypes">
+	<ltng:require styles="{!join(',', 
+                          $Resource.SLDS105 + '/assets/styles/salesforce-lightning-design-system-vf.css', 
+                          $Resource.SLDS105 + '/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
+    
+    <aura:attribute name="contact" type="Lead" default="{ 'sobjectType': 'Lead' }"/>                                                                                                    
+    <aura:attribute name="Name" type="String"/>
+    <aura:attribute name="EmailId" type="String"/>
+    <aura:attribute name="Phone" type="String"/>
+    <aura:attribute name="Query" type="String"/>
+    
+    <div class="slds">
+        <div class="slds-text-heading--large slds-text-align--center">Web To Lead Form</div>
+        <br/>
+        <br/>
+        <br/>
+        <div class="slds-grid slds-grid--align-center">
+            <ui:inputText label="Name" value="{!v.Name}" required="true"/>                                                  
+        </div>
+        <br/>
+        <div class="slds-grid slds-grid--align-center">
+            <ui:inputText label="Email Id" value="{!v.EmailId}" required="true"/>                                                  
+        </div>
+        <br/>
+        <div class="slds-grid slds-grid--align-center">
+            <ui:inputText label="Phone" value="{!v.Phone}" required="true"/>                                                  
+        </div>
+        <br/>
+        <div class="slds-grid slds-grid--align-center">
+            <ui:inputTextArea aura:id="comments" label="Query" value="{!v.Query}" rows="5"/>
+        </div>
+        <br/>
+        <div class="slds-form-element__control slds-grid slds-grid--align-center">
+            <ui:button class="slds-button customButton" label="Submit" press="{!c.submit}"/>
+        </div>
+    </div>
+</aura:component>

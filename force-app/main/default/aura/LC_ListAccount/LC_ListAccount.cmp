@@ -1,0 +1,108 @@
+<aura:component Controller="ContactsController" implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="isVisible" type="Boolean" default="true" />
+   
+    <aura:attribute name="contactId" type="String" />
+    <aura:attribute name="contacts" type="Contact" />
+    <aura:attribute name="returnAccList" type="Account[]" />
+    <aura:attribute name="accRecord" type="Account" />
+    <aura:attribute name="getSouceBPAccounts" type="String" />
+    <aura:attribute name="accountId" type="string" default="0016300000MZkms"/>
+    <aura:attribute name="accountIdValue" type="Account"/>
+    <aura:registerEvent name="appEvent" type="c:LE_HelloEvent" ></aura:registerEvent>
+    
+    <aura:handler event="c:LE_HelloEvent" action="{!c.callContacts}"></aura:handler>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /><!--Client-side Controller-->
+    <aura:if isTrue="{!v.isVisible}">
+        <h2 class="slds-text-heading--medium slds-text-align--center slds-m-top--xx-large slds-text-font-weight--bold" title="Header">Account Details</h2>
+        <h2 class="slds-text-heading--medium slds-text-align--center slds-m-top--xx-large slds-text-font-weight--bold" title="Header">Display the Account Details</h2>
+                
+        <!-- Box 1 -->
+        <aura:iteration items="{!v.returnAccList}" var="acc">
+            <div class="slds-card-top-container-profile-deactivation">
+                <div class="slds-grid slds-grid_align-spread ">
+                    <p class="slds-top-account-number slds-text-paragraph">Account #: {!acc.Name}</p>
+                    <div class="slds-grid slds-grid_align-spread">
+                        <div class="slds-icon-booger slds-m-right_x-small"></div>
+                        <div class="slds-icon-gas"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-card-bottom-container slds-color-gray">
+                <div class="slds-grid">
+                    <ul class="slds-m-top--medium">
+                        <li class="slds-text-paragraph-card--regular">{!acc.BillingStreet}</li>
+                        <li class="slds-text-paragraph-card--regular">{!acc.BillingState}</li>
+                        <li class="slds-text-paragraph-card--regular">{!acc.BillingCountry}</li>
+                    </ul>
+                </div>
+            </div>
+        </aura:iteration> 
+        <!-- Start Card Creation -->
+        <aura:iteration items="{!v.returnAccList}" var="acc">
+		<article class="slds-card">
+  <div class="slds-card__header slds-grid">
+    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+      <div class="slds-media__figure">
+        <span class="slds-icon_container slds-icon-standard-contact" title="description of icon when needed">
+          
+        </span>
+      </div>
+      
+    </header>
+    <div class="slds-no-flex">
+      <button class="slds-button slds-button_neutral">New</button>
+    </div>
+  </div>
+  <div class="slds-card__body">
+    <ul class="slds-card__body_inner slds-grid slds-wrap slds-grid_pull-padded">
+      <li class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-3">
+        <article class="slds-tile slds-media slds-card__tile slds-hint-parent">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-contact" title="Description of icon when needed">
+              
+              <span class="slds-assistive-text">Account</span>
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+              <h3 class="slds-tile__title slds-truncate" title="Related Record Title 1"><a href="javascript:void(0);">Related Record Title 1</a></h3>
+              <div class="slds-shrink-none">
+                <button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small" aria-haspopup="true" title="More options">
+                  
+                  <span class="slds-assistive-text">More options</span>
+                </button>
+              </div>
+            </div>
+            <div class="slds-tile__detail">
+              <dl class="slds-list_horizontal slds-wrap">
+                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="First Label">Account Name:</dt>
+                <dd class="slds-item_detail slds-truncate" title="Description for first label">{!acc.Name}</dd>
+                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Second Label">Account Street:</dt>
+                <dd class="slds-item_detail slds-truncate" title="Description for second label">{!acc.BillingState}</dd>
+                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Second Label">Account Country:</dt>
+                <dd class="slds-item_detail slds-truncate" title="Description for second label">{!acc.BillingCountry}</dd>
+				<dt class="slds-item_label slds-text-color_weak slds-truncate" title="Second Label">Account State:</dt>
+                <dd class="slds-item_detail slds-truncate" title="Description for second label">{!acc.BillingState}</dd>
+
+              </dl>
+            </div>
+          </div>
+        </article>
+        </li>
+      </ul>
+  </div>
+</article>
+ </aura:iteration> 
+	<ui:button label="save" press="{!c.getContact}" ></ui:button>
+        
+        <!-- END   -->
+        
+       
+        <!-- *** Final Production for Offshore Team - Start *** -->
+
+        
+    </aura:if>
+    <div aura:id="sform">
+        {!v.body}
+    </div>
+</aura:component>

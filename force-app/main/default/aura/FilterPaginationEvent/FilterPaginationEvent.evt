@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="return Opportunities after clicking filter button">
+   <aura:attribute name="OpportunityList" type="Opportunity[]"></aura:attribute>
+   <aura:attribute name="DisplayCSS" type="String" default="None"></aura:attribute>
+   <aura:attribute name="accId" type="String"></aura:attribute>
+</aura:event>

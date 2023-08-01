@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="application event">
+    	<aura:attribute name="MergeListOfContactIds" type="List[]"/>
+</aura:event>

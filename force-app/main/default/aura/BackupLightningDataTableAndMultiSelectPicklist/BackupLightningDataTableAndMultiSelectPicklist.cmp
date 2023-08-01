@@ -1,0 +1,304 @@
+<aura:component controller="SingleRelatedListController" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global">
+    <aura:attribute name="sobjectApiName" type="String" />   
+    <aura:attribute name="relatedFieldApiName" type="String" /> 
+    <aura:attribute name="DocFolderNames" type="List" default="[]"/>
+    <aura:attribute name="folderName" type="String" default="Active" />  
+    <aura:attribute name="numberOfRecords" type="Integer" default=""/>    
+    <aura:attribute name="sortedBy" type="String" />
+    <aura:attribute name="sortedDirection" type="String" default="ASC"/>    
+    <aura:attribute name="onRowActionHandler" type="Aura.Action"/>    
+    <aura:attribute name="customActions" type="List"/>    
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="columnsWithActions" type="List" access="private"/>
+    <aura:attribute name="fields" type="String" /> 
+    <aura:attribute name="records" type="Object" access="private"/>
+    <aura:attribute name="parentRelationshipApiName" type="String" access="private"/>    
+    <aura:attribute name="sobjectLabel" type="String" access="private"/>    
+    <aura:attribute name="sobjectLabelPlural" type="String" access="private"/>    
+    <aura:attribute name="numberOfRecordsForTitle" type="String" access="private"/>    
+    <aura:attribute name="iconName" type="String" access="private"/>    
+    <aura:attribute name="mycolumns" type="List"/>
+    <aura:attribute name="selectedRows" type="List" />
+    <aura:attribute name="selectedRowsCount" type="Integer" default="0"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler name="change" value="{!v.columns}" action="{! c.handleColumnsChange }"/>
+    <aura:handler event="force:showToast" action="{!c.handleToastEvent}"/>  
+    <aura:attribute name="selectedRowsDetails" type="Object" />
+    <aura:attribute name="selectedRowsID" type="List" />
+    <aura:attribute name="selectedRowsList" type="List" />
+    <aura:attribute name="selectedFolderName" type="String" default="Active"/>
+    <aura:attribute name="SelectedDocMangIds" type="String[]" default="[]" />
+    <aura:attribute name="SelectedDMSFolder" type="String" default="" />
+    <aura:attribute name="SelectedDMSDocType" type="String" default="" />
+    <aura:attribute name="DMSDocName" type="String" default="" />
+    <aura:attribute name="DMSDescription" type="String" default="" />
+    <aura:attribute name="DMSKeyWords" type="String" default="" />
+    <aura:attribute name="DMSVersion" type="String" default="1" />
+    <aura:attribute name="DMSContLOB" type="List" default="[]" />
+    <aura:attribute name="DMSActiveCont" type="boolean" default="false" />
+    <aura:attribute name="DMSCompCont" type="boolean" default="false" /> 
+    <aura:attribute name="DMSDocTypeOption" type="List" default="[]" />
+    <aura:attribute name="DMSDocFolderNameOption" type="List" default="[]" />
+    <aura:attribute name="DMSDocContLOBOption" type="List" default="[]" />
+    <aura:attribute name="DMSDocContLOBValues" type="String" default="" /> 
+    <aura:attribute name="DocFoldName" type="String" default="" />
+    <aura:attribute name="DocFoldDesc" type="String" default="" />
+    <aura:attribute name="responseStore" type="String" default="" /> 
+    <aura:attribute name="isModalResponseOpen" type="boolean" default="false" /> 
+    <aura:attribute name="isFolderModalOpen" type="boolean" default="false" />
+    <aura:attribute name="multiSelectValues" type="List" default="[]" />
+    <!-- HTML: override clipping standard view -->
+    <aura:html tag="style">
+        .cuf-content {
+        padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+        padding-bottom: 0rem !important;
+        padding-right: 0rem !important;
+        padding-left: 0rem !important;
+        }       
+        .slds-modal__content {
+        height:unset !important;
+        max-height:unset !important;
+        width:
+        }
+        .slds-modal__container{
+        max-width: 70rem !important;
+        width:70% !important;
+        }
+    </aura:html>
+    
+   <aura:attribute name="options" type="List" default="[
+    {'label': 'Ross', 'value': 'option1'},
+    {'label': 'Rachel', 'value': 'option2'}
+    ]"/>
+    <aura:attribute name="value" type="List" default="option1"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    
+    <div class="c-container">
+        <lightning:card class="slds-card__header-link backHeader" iconName="{!v.iconName}">
+            		
+            <aura:set attribute="actions">
+                <div class="slds-form_horizontal slds-form slds-grid slds-wrap">
+                <lightning:layout>
+                      <lightning:layoutItem size="6" class="topRightMargin">
+                      <c:MultiSelect aura:id="folders" mslabel="" msoptions="{!v.DocFolderNames}" /> 
+                    	 </lightning:layoutItem>
+                  
+                    <lightning:layoutItem Size="6" class="topMargin">
+                      <!--  <c:MultiSelect aura:id="folders" mslabel="" msoptions="{!v.DocFolderNames}" /> 
+                    	<lightning:button label="New Folder" onclick="{!c.DocFolderModal}"/>  -->
+                        <lightning:button variant="brand" label="Go" onclick="{!c.goToMultiSelectValues}"/>
+                        <lightning:button label="Upload" onclick="{!c.openModal}"/>
+                        <lightning:button label="Download" onclick="{!c.DownloadFile}"/>
+                    </lightning:layoutItem>
+                    <!--
+                    <lightning:layoutItem size="3" class="topMargin">
+                        <lightning:button label="New Folder" onclick="{!c.DocFolderModal}"/>
+                    </lightning:layoutItem> 
+                    <lightning:layoutItem size="4" class="topMargin">
+                        <lightning:button label="Upload" onclick="{!c.openModal}"/>
+                        <lightning:button label="Download" onclick="{!c.DownloadFile}"/> 
+                    </lightning:layoutItem> -->
+                        
+                    <!--
+                    <lightning:layoutItem size="2" class="topRightMargin">
+                        <lightning:button label="Download" onclick="{!c.DownloadFile}"/> 
+                    </lightning:layoutItem> -->
+                    
+                </lightning:layout>
+                    </div>
+            </aura:set> 
+            <!--<aura:set attribute="actions">
+                <lightning:button label="New" onclick="{!c.handleCreateRecord}"/>
+            </aura:set>   --> 
+            <aura:set attribute="title" >
+                <b><a class="slds-card_boundary" onclick="{!c.handleGotoRelatedList}">Document Management</a></b>
+            </aura:set>             
+            <aura:set attribute="footer">
+             <!--   <aura:if isTrue="{!not(empty(v.records))}">  
+                    <a onclick="{!c.handleGotoRelatedList}">View All</a>
+                </aura:if> -->
+            </aura:set>  
+            
+            <aura:if isTrue="{!not(empty(v.records))}">    
+                <p class="slds-p-horizontal_small">                  
+                    <lightning:datatable class="related-list"
+                                         columns="{! v.mycolumns}"
+                                         data="{! v.records }"
+                                         keyField="id"
+                                         selectedRows="{! v.selectedRows }"
+                                         onrowselection="{! c.updateSelectedText }"
+                                         onrowaction="{! c.handleRowAction }"
+                                         hideCheckboxColumn="false"
+                                         resizeColumnDisabled="true"/>                     
+                </p>               
+            </aura:if>
+            
+        </lightning:card>
+    </div>
+    <!--
+    <div>
+        <lightning:flow aura:id="AccountNavigation" onstatuschange="{!c.statusChange}"/>
+    </div>  -->        
+    <aura:if isTrue="{!v.isModalOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="brand"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Document Management</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="myRecordForm">
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:input label="Document Name" required="true" value="{!v.DMSDocName}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:textarea label="Description" type="textarea" value="{!v.DMSDescription}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:input label="Key Words" value="{!v.DMSKeyWords}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:input label="Version" value="{!v.DMSVersion}" readonly="true"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:combobox aura:id="field" label="Doc Type" required="true" value="{v.SelectedDMSDocType}" placeholder="Select Folder" options="{! v.DMSDocTypeOption }" onchange="{! c.onChangeDocType }"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:combobox aura:id="field" label="Folder" required="true" value="{v.SelectedDMSFolder}" placeholder="Select Folder" options="{! v.DMSDocFolderNameOption }" onchange="{! c.onChangeDocFolder }"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    
+                    
+                    <lightning:dualListbox name="languages"
+                                           label= "Contract LOB"
+                                           sourceLabel="Available"
+                                           selectedLabel="Selected"
+                                           options="{!v.DMSDocContLOBOption}"
+                                           value="{!v.DMSDocContLOBValues}"
+                                           onchange="{! c.handleMultiSelect }"/>
+                    
+                    <!--  <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:input label="Contract LOB" />
+                        </lightning:layoutItem>  -->
+                    
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:input type="checkbox" label="Active Contract" checked="{!v.DMSActiveCont}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:input type="checkbox" label="Competitor Contract" checked="{!v.DMSCompCont}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    
+                    <!--  <iframe src="{!v.responseStore}"
+                            width="100%"
+                            height="100%"
+                            style=""
+                            frameBorder=""
+                            sandbox=""
+                            scrolling=""/> -->
+                </div> 
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{! c.closeModel }"/>
+                    <lightning:button variant="brand"
+                                      label="Next"
+                                      title="OK"
+                                      onclick="{!c.navigate}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if> 
+    
+    <aura:if isTrue="{!v.isFolderModalOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="brand"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Document Folder</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="myFolderForm">
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:input label="Folder Name" value="{!v.DocFoldName}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:textarea label="Description" type="textarea" value="{!v.DocFoldDesc}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </div> 
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{! c.closeModel }"/>
+                    <lightning:button variant="brand"
+                                      label="Next"
+                                      title="OK"
+                                      onclick="{!c.folderCreate}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if> 
+    <!--
+    <aura:if isTrue="{!v.isModalResponseOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <iframe src="{!v.responseStore}"
+                        width="100%"
+                        height="100%"
+                        style=""
+                        frameBorder=""
+                        sandbox=""
+                        scrolling=""/>
+            </div>
+        </section>
+    </aura:if> 
+    <aura:if isTrue="{!v.isModalResponseOpen}">
+        <section onclick="{!c.closePreviewModel}"
+                 role="dialog"
+                 aria-modal="true"
+                 class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__content slds-p-around_medium slds-text-align_center"
+                     style="background: transparent;">
+                    <div style="width: 50%; margin: 0 auto; text-align: left">
+                        <lightning:fileCard> to preview file using content document Id 
+                        <lightning:fileCard fileId="{!v.responseStore}"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if> -->
+    </aura:component>

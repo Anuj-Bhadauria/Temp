@@ -1,0 +1,39 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+	
+    <aura:handler name="componentEventFired" event="c:MergeContactLightningEvt" action="{!c.handleEvent}"></aura:handler> <!-- Handler for custom event -->
+    
+    <aura:handler name="compTwoEventFired" event="c:compTwoToParent" action="{!c.openCompThree}"></aura:handler> <!-- Handler for custom event -->
+    
+    <aura:handler name="mergeContMaterEvent" event="c:mergeContactMasterEvt" action="{!c.handleMaterEvt}"></aura:handler> <!-- Handler for custom event -->
+    
+	<aura:attribute name="ShowMergeMaster" type="Boolean" default="true"/>    
+    
+    <aura:attribute name="MatserRecordId" type="Id" />
+    
+    <aura:attribute name="message" type="String" default="default"></aura:attribute> 
+    <aura:attribute name="checkboxesChecked" type="List" access="global" ></aura:attribute>
+    <aura:attribute name="AccIDFromVfPage" type="string"/>
+    <!-- <aura:handler   name="init" value="{!this}" action="{!c.doInit}"/>-->
+    
+     <lightning:card footer="Card Footer" title="Hello">
+         <aura:set attribute="title">
+            <lightning:icon iconName="utility:connected_apps" size="small"/>
+            Merge Contacts
+        </aura:set>
+         
+        <aura:if isTrue="{!or(equals(v.message,'default'),equals(v.message,'Previous')) }">
+        	<c:MergeContactLightning AccIDFromVfPage="{!v.AccIDFromVfPage}"></c:MergeContactLightning>
+        	<aura:set attribute="else">
+            	<aura:if isTrue="{!v.ShowMergeMaster}">
+                 		<c:MergeContactLightningScreen2 AccIDFromVfPage="{!v.AccIDFromVfPage}" checkboxesChecked="{!v.checkboxesChecked}"></c:MergeContactLightningScreen2>
+                	<aura:set attribute="else">
+                    	<c:MergeContactMaster  masterId="{!v.MatserRecordId}" contactIdList="{!v.checkboxesChecked}"></c:MergeContactMaster>
+                	</aura:set>
+            	</aura:if>   
+        	</aura:set>
+    </aura:if>
+    </lightning:card>
+    
+    
+    
+</aura:component>
